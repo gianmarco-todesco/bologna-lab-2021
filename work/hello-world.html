@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Hello, World!</title>
+        <style>
+            html, body {
+                overflow:hidden;
+                width:100%;
+                height:100%;
+                margin:0;
+                padding:0;
+            }
+            #renderCanvas {
+                width:100%;
+                height:100%;
+                touch-action: none;
+            }
+        </style>
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+    </head>
+    <body>
+        <canvas id="renderCanvas" touch-action="none"></canvas>
+        <script>
+            const canvas = document.getElementById("renderCanvas");
+            const engine = new BABYLON.Engine(canvas, true); 
+            
+            const scene = new BABYLON.Scene(engine);
+            const camera = new BABYLON.ArcRotateCamera('cam', 
+                Math.PI/2,0.7,
+                6, // distance 
+                new BABYLON.Vector3(0,0,0), 
+                scene);
+            camera.attachControl(canvas,true);
+            camera.wheelPrecision = 50;
+            camera.lowerRadiusLimit = 3;
+            camera.upperRadiusLimit = 13;            
+            let light1 = new BABYLON.PointLight('light1',
+                new BABYLON.Vector3(0,2,0), 
+                scene);
+            light1.parent = camera;
+
+            let sphere = BABYLON.MeshBuilder.CreateSphere('s',{diameter:1},scene);
+            sphere.material = new BABYLON.StandardMaterial('sm',scene);
+            sphere.material.diffuseColor.set(0.9,0.2,0.1);
+            
+            let ring1 = BABYLON.MeshBuilder.CreateTorus('t1', {
+                diameter:1.25, thickness:0.25, tessellation:100
+            }, scene);
+            ring1.material = new BABYLON.StandardMaterial('t1m',scene);
+            ring1.material.diffuseColor.set(0.9,0.4,0.1);
+
+            let ring2 = BABYLON.MeshBuilder.CreateTorus('t2', {
+                diameter:1.75, thickness:0.25, tessellation:100
+            }, scene);
+            ring2.material = new BABYLON.StandardMaterial('t2m',scene);
+            ring2.material.diffuseColor.set(0.9,0.8,0.1);
+
+            scene.registerBeforeRender(()=>{
+                let t = performance.now() * 0.001;
+                ring1.rotation.x = t;
+                ring2.rotation.z = t;
+                
+            });
+
+            engine.runRenderLoop(() => scene.render());
+            window.addEventListener("resize", () => engine.resize());
+
+        </script>
+    </body>
+</html>

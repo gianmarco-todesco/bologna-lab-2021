@@ -60,32 +60,42 @@
             let camera = new BABYLON.ArcRotateCamera('cam', Math.PI/2,0.7,15, new BABYLON.Vector3(0,0,0), scene);
             camera.attachControl(canvas,true);
             camera.wheelPrecision = 50;
-            camera.lowerRadiusLimit = 3;
-            camera.upperRadiusLimit = 13;            
+            camera.lowerRadiusLimit = 30;
+            camera.upperRadiusLimit = 30;            
             let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
             light1.parent = camera;
 
             // qui comincia la parte interessante: creo una sfera e due anelli concentrici. Provate a cambiare i parametri : ad es. il diametro dell'anello esterno.
-            let sphere = BABYLON.MeshBuilder.CreateSphere('s', {diameter:2.0}, scene);
-            let torus1 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:4.0, thickness:1, tessellation : 70}, scene);
-            let torus2 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:7.0, thickness:1, tessellation : 70}, scene);
+            let sphere = BABYLON.MeshBuilder.CreateSphere('s', {diameter:1, segments:80, diameterY: 2, diameterX: 4, diameterZ: 3}, scene);
+            let torus1 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:5.0, thickness:1.5, tessellation : 80}, scene);
+            let torus2 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:10.0, thickness:3, tessellation : 80}, scene);
+            
             // appiattisco gli anelli (applicando un fattore di scala lungo l'asse y; in questo ambiente l'asse y va verso l'alto, in verticale)
-            torus1.scaling.y = 0.5;
-            torus2.scaling.y = 0.5;
-
+            torus1.scaling.y = 2;
+            torus2.scaling.y = 1;
+            torus2.scaling.x = 2;
+            torus1.scaling.x = 3;
             // qui c'è l'animazione. Il codice seguente viene chiamato circa 60 volte al secondo.
 	          engine.runRenderLoop(function() { 
 
               // calcolo il numero di secondi trascorsi dall'inizio
               let t = performance.now() * 0.001;
+              let f = performance.now() * 0.1;
+              let c = performance.now() * 0.01
               // ruoto l'anello interno attorno all'asse x
-              torus1.rotation.x = t;
+              torus1.rotation.y = c;
+              torus1.rotation.x = f;
+              torus2.rotation.x = f;
+              torus2.rotation.y = t;
+              sphere.rotation.x = c;
+              sphere.rotation.y = t;
               // provate ad aggiungere una riga in modo da far ruotare anche l'anello esterno. 
               // come si fa a cambiare la velocità di rotazione? Nella riga precedente vediamo che l'angolo di rotazione al tempo t è uguale proprio
               // a t: l'anello interno ruota alla velocità di un radiante (gli angoli di rotazione sono specificati in radianti e non in gradi) al secondo.
-              torus2.rotation.x = t*2;
       
               // ... qui ci va il vostro codice!! ...
+								   
+
 
               // qust'ultimo comando disegna il nuovo fotogramma
               scene.render();

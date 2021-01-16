@@ -67,11 +67,11 @@
 
             // qui comincia la parte interessante: creo una sfera e due anelli concentrici. Provate a cambiare i parametri : ad es. il diametro dell'anello esterno.
             let sphere = BABYLON.MeshBuilder.CreateSphere('s', {diameter:2.0}, scene);
-            let torus1 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:4.0, thickness:1, tessellation : 70}, scene);
-            let torus2 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:7.0, thickness:1, tessellation : 70}, scene);
+            let torus1 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:4.0, thickness:0.8, tessellation : 50}, scene);
+            let torus2 = BABYLON.MeshBuilder.CreateTorus('t', {diameter:7.0, thickness:0.8, tessellation : 50}, scene);
             // appiattisco gli anelli (applicando un fattore di scala lungo l'asse y; in questo ambiente l'asse y va verso l'alto, in verticale)
-            torus1.scaling.y = 0.5;
-            torus2.scaling.y = 0.5;
+            torus1.scaling.y = 0.1;
+            torus2.scaling.y = 0.1;
 
             // qui c'è l'animazione. Il codice seguente viene chiamato circa 60 volte al secondo.
 	          engine.runRenderLoop(function() { 
@@ -80,10 +80,11 @@
               let t = performance.now() * 0.001;
               // ruoto l'anello interno attorno all'asse x
               torus1.rotation.x = t;
+              torus2.rotation.x = 2*t;
+              torus2.rotation.y = 2*t;
               // provate ad aggiungere una riga in modo da far ruotare anche l'anello esterno. 
               // come si fa a cambiare la velocità di rotazione? Nella riga precedente vediamo che l'angolo di rotazione al tempo t è uguale proprio
               // a t: l'anello interno ruota alla velocità di un radiante (gli angoli di rotazione sono specificati in radianti e non in gradi) al secondo.
-              torus2.rotation.x = t*2;
       
               // ... qui ci va il vostro codice!! ...
 
