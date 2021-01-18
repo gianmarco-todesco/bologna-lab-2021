@@ -16,6 +16,7 @@ ma completamente diverso.
 
 
 -----
-puzzle
+puzzle (es labirinto)
+
 curve
 DNA
