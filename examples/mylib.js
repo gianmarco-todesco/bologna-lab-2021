@@ -92,7 +92,7 @@ MYLIB.initialize = function (canvasId, populateScene) {
         camera.attachControl(canvas,true);
         camera.wheelPrecision = 50;
         camera.lowerRadiusLimit = 3;
-        camera.upperRadiusLimit = 13;            
+        camera.upperRadiusLimit = 13*2;            
         let light1 = new BABYLON.PointLight('light1',new BABYLON.Vector3(0,1,0), scene);
         light1.parent = camera;
     
@@ -102,4 +102,14 @@ MYLIB.initialize = function (canvasId, populateScene) {
         window.addEventListener("resize", () => engine.resize());
     });
     
+}
+
+
+MYLIB.align = function(mesh, p1, p2) {
+    let delta = p2.subtract(p1);
+    mesh.position.set(0,0,0);
+    mesh.lookAt(delta);
+    mesh.rotate(BABYLON.Axis.X, Math.PI/2);
+    mesh.scaling.set(1,delta.length(),1);
+    BABYLON.Vector3.LerpToRef(p1,p2,0.5,mesh.position);   
 }
