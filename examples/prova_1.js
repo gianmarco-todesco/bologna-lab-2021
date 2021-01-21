@@ -1,4 +1,3 @@
-console.log(window);
 MYLIB.initialize('renderCanvas', populateScene);
 
 

@@ -7,7 +7,7 @@
             body { padding:20px; }
             canvas {
                 border: 1px solid black;
-                box-shadow: 10px 10px 30px gray;
+                box-shadow: 10px 10px 30px red;
             }
             .signature {
               text-align: right;
@@ -17,6 +17,7 @@
     </head>
     <body>
         <h1>Metodi matematici per l'animazione</h1>
+        <h2>ciao ciao</h2>
         <canvas id="c" width="400" height="400"></canvas>
         <h2>Esempio</h2>
         <p>
@@ -77,7 +78,7 @@
 	          engine.runRenderLoop(function() { 
 
               // calcolo il numero di secondi trascorsi dall'inizio
-              let t = performance.now() * 0.001;
+              let t = performance.now() * 0.0001;
               // ruoto l'anello interno attorno all'asse x
               torus1.rotation.x = t;
               // provate ad aggiungere una riga in modo da far ruotare anche l'anello esterno. 
