@@ -11,7 +11,7 @@ function pippo(scene) {
     
     // per risparmiare fatica :-)
     const MB = BABYLON.MeshBuilder;
-    let mesh;
+    let meshes = [];
 
     //------------------------------------------
     // sfera
@@ -19,7 +19,26 @@ function pippo(scene) {
     mesh = MB.CreateSphere('sphere',{
         diameter:1.5
     },scene);
-    mesh.position.set(4,1,4);
+    meshes.push(mesh);
+
+
+    //------------------------------------------
+    // sfera schiacciata
+    //------------------------------------------
+    mesh = MB.CreateSphere('sphere',{
+        diameter:1.5
+    },scene);
+    mesh.scaling.set(1,0.2,1);
+    meshes.push(mesh);
+
+    //------------------------------------------
+    // sfera schiacciata (2)
+    //------------------------------------------
+    mesh = MB.CreateSphere('sphere',{
+        diameter:1.5
+    },scene);
+    mesh.scaling.set(0.2,1,0.2);
+    meshes.push(mesh);
 
     //------------------------------------------
     // cubo
@@ -27,7 +46,7 @@ function pippo(scene) {
     mesh = MB.CreateBox('cube',{
         size:1.2
     },scene);
-    mesh.position.set(2,1,4);
+    meshes.push(mesh);
 
     //------------------------------------------
     // parallelepipedo
@@ -35,7 +54,7 @@ function pippo(scene) {
     mesh = MB.CreateBox('box',{
         width:0.6, height:1.2, depth:0.2
     },scene);
-    mesh.position.set(0,1,4);
+    meshes.push(mesh);
 
     //------------------------------------------
     // cilindro
@@ -43,7 +62,7 @@ function pippo(scene) {
     mesh = MB.CreateCylinder('cylinder',{
         diameter:1.0, height:1.2
     },scene);
-    mesh.position.set(-2,1,4);
+    meshes.push(mesh);
 
     //------------------------------------------
     // cilindro 2
@@ -51,7 +70,7 @@ function pippo(scene) {
     mesh = MB.CreateCylinder('cylinder2',{
         diameter:1.2, height:0.2
     },scene);
-    mesh.position.set(-4,1,4);
+    meshes.push(mesh);
 
     //------------------------------------------
     // cono 
@@ -61,7 +80,7 @@ function pippo(scene) {
         diameterBottom:1.2, 
         height:1.2
     },scene);
-    mesh.position.set(4,1,2);
+    meshes.push(mesh);
 
     //------------------------------------------
     // tronco di cono 
@@ -71,7 +90,7 @@ function pippo(scene) {
         diameterBottom:1.2, 
         height:1.2
     },scene);
-    mesh.position.set(2,1,2);
+    meshes.push(mesh);
 
     //------------------------------------------
     // ciambella
@@ -81,7 +100,18 @@ function pippo(scene) {
         tickness:0.5, 
         tessellation:40
     },scene);
-    mesh.position.set(0,1,2);
+    meshes.push(mesh);
+
+    //------------------------------------------
+    // ciambella schiacciata
+    //------------------------------------------
+    mesh = MB.CreateTorus('torus',{
+        diameter:1.5, 
+        tickness:0.5, 
+        tessellation:40
+    },scene);
+    mesh.scaling.set(1,0.2,0.5);
+    meshes.push(mesh);
 
     //------------------------------------------
     // dodecaedro (ci sono quindici poliedri
@@ -91,7 +121,7 @@ function pippo(scene) {
         type: 2,
         size: 0.8
     },scene);
-    mesh.position.set(-2,1,2);
+    meshes.push(mesh);
 
     //------------------------------------------
     // questo è un altro poliedro predefinito
@@ -100,7 +130,7 @@ function pippo(scene) {
         type: 4,
         size: 0.8
     },scene);
-    mesh.position.set(-4,1,2);
+    meshes.push(mesh);
 
     //------------------------------------------
     // un poliedro "custom"
@@ -118,7 +148,7 @@ function pippo(scene) {
         },
         size: 0.6
     },scene);
-    mesh.position.set(4,1,0);
+    meshes.push(mesh);
 
     //------------------------------------------
     // un secondo poliedro "custom"
@@ -136,7 +166,7 @@ function pippo(scene) {
         },
         size: 0.6
     },scene);
-    mesh.position.set(2,1,0);
+    meshes.push(mesh);
 
     //------------------------------------------
     // un tubo
@@ -160,7 +190,7 @@ function pippo(scene) {
         radius: 0.1,
         cap: BABYLON.Mesh.CAP_ALL
     }, scene);
-    mesh.position.set(0,1,0);
+    meshes.push(mesh);
 
     //------------------------------------------
     // un altro tubo
@@ -184,13 +214,95 @@ function pippo(scene) {
         radiusFunction: (i,dist) => 0.2/(1.0+0.5*dist),
         cap: BABYLON.Mesh.CAP_ALL
     }, scene);
-    mesh.position.set(-2,1,0);
+    meshes.push(mesh);
 
 
+    //------------------------------------------
+    // una mesh completamente custom
+    //------------------------------------------
+    function makeSurfaceVertexData(f, scene) {
+        let nx = 30, nz = 30;
+        let vd = new BABYLON.VertexData();
+        vd.positions = [];
+        vd.indices = [];
+        for(let iz=0;iz<nz;iz++) {
+            let z = -1+2*iz/(nz-1);
+            for(let ix=0;ix<nx;ix++) {
+                let x = -1+2*ix/(nx-1);
+                y = f(x,z);
+                vd.positions.push(x,y,z);                
+            }
+        }
+        for(let iz=0;iz+1<nz;iz++) {
+            for(let ix=0;ix+1<nx;ix++) {
+                let k = iz*nx+ix;
+                vd.indices.push(k,k+1,k+1+nx, k,k+1+nx,k+nx);
+            }
+        }
+        vd.normals = [];
+        BABYLON.VertexData.ComputeNormals(
+            vd.positions, 
+            vd.indices, 
+            vd.normals);
+        mesh = new BABYLON.Mesh('surface', scene);
+        vd.applyToMesh(mesh);
+        return mesh;    
+    }
+    mesh = makeSurfaceVertexData(
+        (x,z) => {
+            let r = 9*Math.sqrt(x*x+z*z);
+            return 0.6*Math.sin(r)/r;
+        }, scene);
+    meshes.push(mesh);
 
-    // assegno colori diversi a tutti gli oggetti
-    // nella scena
-    let meshes = scene.meshes.filter(mesh => mesh.name != "lines");
+    //------------------------------------------
+    // CSG: cubo meno sfera
+    //------------------------------------------
+    function csg1() {
+        let mesh1 = MB.CreateBox('a',{size:1},scene);
+        let mesh2 = MB.CreateSphere('b',{diameter:1.1},scene);
+        let result = BABYLON.CSG.FromMesh(mesh1)
+            .subtract(BABYLON.CSG.FromMesh(mesh2));
+        let mesh = result.toMesh('csg1', null, scene);
+        mesh1.dispose();
+        mesh2.dispose();
+        return mesh;        
+    }
+    let t0 = performance.now();
+    mesh = csg1();
+    console.log(performance.now() - t0);
+    meshes.push(mesh);
+
+    //------------------------------------------
+    // CSG: cilindro meno cilindro meno box
+    //------------------------------------------
+    function csg2() {
+        let mesh1 = MB.CreateCylinder('a',{diameter:1, height:1.6},scene);
+        let mesh2 = MB.CreateCylinder('b',{diameter:0.9, height:1.7},scene);
+        let mesh3 = MB.CreateBox('c',{size:2},scene);
+        mesh3.position.x = 1;
+        let result = BABYLON.CSG.FromMesh(mesh1)
+            .subtract(BABYLON.CSG.FromMesh(mesh2))
+            .subtract(BABYLON.CSG.FromMesh(mesh3));
+        let mesh = result.toMesh('csg1', null, scene);
+        mesh1.dispose();
+        mesh2.dispose();
+        mesh3.dispose();
+        return mesh;        
+    }
+    t0 = performance.now();
+    mesh = csg2();
+    mesh.rotation.z = Math.PI/2;
+    console.log(performance.now() - t0);
+    meshes.push(mesh);
+
+
+    //------------------------------------------
+    // fine
+    //------------------------------------------
+
+
+    // assegno colori diversi alle mesh
     meshes.forEach((mesh,i) => {
         let phi = Math.PI*2*i/meshes.length;
         let mat = mesh.material = new BABYLON.StandardMaterial(
@@ -200,11 +312,13 @@ function pippo(scene) {
             0.5 + 0.4 * Math.sin(phi),
             0.5 + 0.4 * Math.sin(2*phi)
         );
-        
     });
-    
-    //scene.registerBeforeRender(() => {
-    //    let t = performance.now() * 0.001;
-    //});
+
+    // piazzo le mesh sulla griglia
+    meshes.forEach((mesh,i) => {
+        let row = Math.floor(i/5);
+        let col = i%5;
+        mesh.position.set(4-2*col,1,4-2*row*5/4);
+    });
 
 }
