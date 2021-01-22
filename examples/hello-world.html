@@ -23,48 +23,74 @@
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas>
         <script>
+            // un riferimento all'oggetto <canvas> nel documento
             const canvas = document.getElementById("renderCanvas");
+
+            // il motore grafico BABYLON (che farà il disegno
+            // dentro la <canvas>)
             const engine = new BABYLON.Engine(canvas, true); 
             
+            // la scena (che contiene tutti i miei oggetti)
             const scene = new BABYLON.Scene(engine);
+
+            // la telecamera virtuale che inquadra la scena
             const camera = new BABYLON.ArcRotateCamera('cam', 
                 Math.PI/2,0.7,
                 6, // distance 
                 new BABYLON.Vector3(0,0,0), 
                 scene);
+            // voglio controllare la telecamera virtuale
+            // usando il mouse e i tasti freccia
             camera.attachControl(canvas,true);
+            // controllo la sensibilità al movimento della
+            // rotellina del mouse
             camera.wheelPrecision = 50;
+            // fisso i limiti allo zoom 
             camera.lowerRadiusLimit = 3;
-            camera.upperRadiusLimit = 13;            
+            camera.upperRadiusLimit = 13;  
+            
+            // una luce
             let light1 = new BABYLON.PointLight('light1',
                 new BABYLON.Vector3(0,2,0), 
                 scene);
+            // la luce è attaccata alla camera
             light1.parent = camera;
 
+            // creo un sfera, con un materiale
             let sphere = BABYLON.MeshBuilder.CreateSphere('s',{diameter:1},scene);
             sphere.material = new BABYLON.StandardMaterial('sm',scene);
             sphere.material.diffuseColor.set(0.9,0.2,0.1);
             
+            // un anello
             let ring1 = BABYLON.MeshBuilder.CreateTorus('t1', {
                 diameter:1.25, thickness:0.25, tessellation:100
             }, scene);
             ring1.material = new BABYLON.StandardMaterial('t1m',scene);
             ring1.material.diffuseColor.set(0.9,0.4,0.1);
 
+            // un secondo anello
             let ring2 = BABYLON.MeshBuilder.CreateTorus('t2', {
                 diameter:1.75, thickness:0.25, tessellation:100
             }, scene);
             ring2.material = new BABYLON.StandardMaterial('t2m',scene);
             ring2.material.diffuseColor.set(0.9,0.8,0.1);
 
+            // muovo gli anelli ad ogni fotogramma
             scene.registerBeforeRender(()=>{
+                // t è il numero di secondi passati
+                // dalla partenza del programma
                 let t = performance.now() * 0.001;
                 ring1.rotation.x = t;
                 ring2.rotation.z = t;
                 
             });
 
+            // faccio partire il "render loop": 60 volte al
+            // secondo l'engine ridisegna la scena
             engine.runRenderLoop(() => scene.render());
+
+            // se cambio le dimensioni della finestra del
+            // browser devo informare l'engine
             window.addEventListener("resize", () => engine.resize());
 
         </script>

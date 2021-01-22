@@ -1,4 +1,3 @@
-console.log(window);
 MYLIB.initialize('renderCanvas', populateScene);
 
 
@@ -10,38 +9,40 @@ function populateScene(scene) {
     mat.diffuseColor.set(0.8,0.4,0.1);
     mat.specularColor.set(0.2,0.2,0.2);
 
-    const pairs = [];
+    // parametri del modello
     const n = 25;
     const R = 5;
-
     const sx = 2, sy = 0.5, sz = 2;
 
+    // creo le coppie di elementi
+    const pairs = [];
     for(let i=0; i<n; i++) {
-		
-      let pair = new BABYLON.Mesh("b",scene);
-      pairs.push(pair);
-      
-      let element;		
-      // first element
-      element = BABYLON.MeshBuilder.CreateSphere("a", {diameter : 1 }, scene);
-      element.scaling.set(sx,sy,sz);		
-      element.material = mat;
-      
-      element.parent = pair;
-      element.position.y = 0.5;
-      pair.firstElement = element;
-      
-      // second element
-      element = BABYLON.MeshBuilder.CreateSphere("b", {diameter : 1 }, scene);
-      element.scaling.set(sx,sy,sz);		
-      element.material = mat;
-      element.parent = pair;
-      element.position.y = -0.5;		
-      pair.secondElement = element;
+
+        // la i-esima coppia
+        let pair = new BABYLON.Mesh("b",scene);
+        pairs.push(pair);
+        
+        let element;		
+        // first element
+        element = BABYLON.MeshBuilder.CreateSphere("a", {diameter : 1 }, scene);
+        element.scaling.set(sx,sy,sz);		
+        element.material = mat;
+        
+        element.parent = pair;
+        element.position.y = 0.5;
+        pair.firstElement = element;
+        
+        // second element
+        element = BABYLON.MeshBuilder.CreateSphere("b", {diameter : 1 }, scene);
+        element.scaling.set(sx,sy,sz);		
+        element.material = mat;
+        element.parent = pair;
+        element.position.y = -0.5;		
+        pair.secondElement = element;
       
     }
   
-
+    // animazione
     scene.registerBeforeRender(() => {
         let t = performance.now() * 0.001;
         var psi = t*0.1;
@@ -63,7 +64,4 @@ function populateScene(scene) {
         });
       
     });
-
-
-
 }

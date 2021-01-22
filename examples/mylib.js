@@ -113,3 +113,17 @@ MYLIB.align = function(mesh, p1, p2) {
     mesh.scaling.set(1,delta.length(),1);
     BABYLON.Vector3.LerpToRef(p1,p2,0.5,mesh.position);   
 }
+
+// vale 0 se t<t0, 1 se t>t1 e cresce linearmente
+// da 0 a 1 quando t va da t0 a t1
+MYLIB.step = function(t, t0, t1) {
+    return t<=t0 ? 0 : t>=t1 ? 1 : (t-t0)/(t1-t0);
+}
+
+// una funzione con il grafico a forma di S
+// è una funzione non decrescente che vale 0 per t<=0,
+// 1 per t>=1 e varia da 0 a 1 per t che varia da 0 a 1
+// accelera in modo graduale all'inizio e decelera alla fine
+MYLIB.smooth = function(t) {
+    return t<0 ? 0 : t>1 ? 1 : (1-Math.cos(Math.PI*t))/2;
+}

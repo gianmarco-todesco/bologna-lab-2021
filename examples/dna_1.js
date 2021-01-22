@@ -1,16 +1,16 @@
-console.log(window);
 MYLIB.initialize('renderCanvas', populateScene);
 
 function populateScene(scene) {
     MYLIB.createGrid(scene);
 
+    // modifico la posizione iniziale della telecamera
     scene.activeCamera.beta = 1.3;
-    // materiale sfere
+
+    // materiale sfere (due materiali diversi)
     const sphereMat1 = new BABYLON.StandardMaterial("m",scene);
     sphereMat1.diffuseColor.set(0.2,0.8,0.5);
     const sphereMat2 = new BABYLON.StandardMaterial("m",scene);
     sphereMat2.diffuseColor.set(0.2,0.2,0.9);
-
 
     // materiale cilindro
     const cylinderMat = new BABYLON.StandardMaterial("m",scene);
@@ -70,7 +70,5 @@ function populateScene(scene) {
             cylinder.rotation.y = (2*t-1) * psi;
         });
     });
-
-
 
 }

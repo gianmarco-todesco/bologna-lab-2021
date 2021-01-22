@@ -1,8 +1,4 @@
-console.log(window);
 MYLIB.initialize('renderCanvas', populateScene);
-
-function createPendulum(color, scene) {
-}
 
 
 function populateScene(scene) {
