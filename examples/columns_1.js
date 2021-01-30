@@ -2,6 +2,9 @@ MYLIB.initialize('renderCanvas', populateScene);
 
 let material;
 
+//
+// creo una colonna
+//
 function createColumn(scene) {
 
 
@@ -41,6 +44,7 @@ function createColumn(scene) {
     obj.material = material;
     obj.parent = column;
     obj.position.y = h1+h2/2;
+    
 
     // toro in alto (sopra la colonna)
     ring = BABYLON.MeshBuilder.CreateTorus('a', {
@@ -61,9 +65,12 @@ function createColumn(scene) {
     box.position.y = h1+h2+0.1;
     
     return column;
-  }
+}
   
 
+//
+// populate scene
+// 
 function populateScene(scene) {
 
     MYLIB.createGrid(scene);
@@ -93,16 +100,21 @@ function populateScene(scene) {
     box.material = material;
     box.position.y = h * 1.5;
     
+
     let m = 3;
     for(let x = -m; x <= m; x+=2) {
         for(let z = -m; z <= m; z+=2) {
-            if(Math.abs(x)<m && Math.abs(z)<m) continue;
+            if(Math.abs(x)<m && Math.abs(z)<m) 
+                continue;
             let column;
             column = createColumn(scene);
             column.position.set(x,h * 2.0,z);
         }
     
     }
+
+
+
 
     // creo una grossa lucciola sferica
     let sphere = BABYLON.MeshBuilder.CreateSphere('s', { 
@@ -114,7 +126,7 @@ function populateScene(scene) {
     let light = new BABYLON.PointLight("pointLight", 
         new BABYLON.Vector3(0, 0, 0), 
         scene);
-    light.range = 4;
+    light.range = 8;
     light.parent = sphere;
 
 
@@ -131,5 +143,6 @@ function populateScene(scene) {
 
         }
     });
+
 
 }
