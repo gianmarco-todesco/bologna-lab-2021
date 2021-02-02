@@ -97,7 +97,9 @@ function populateScene(scene) {
 
     MYLIB.createGrid(scene);
 
+    // avvicino la camera e alzo lo sguardo
     let camera = scene.activeCamera;
+    camera.setTarget(new BABYLON.Vector3(0,1,0));
     camera.radius = 6;
 
     // creo le gambe
