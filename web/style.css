@@ -1,0 +1,42 @@
+html {
+    margin:0;
+    padding:0;
+}
+
+body {
+    padding:20px;
+}
+
+.card {
+    margin:10px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px gray;
+    border:solid 1px black;
+    display:flex;
+    flex-direction: row;
+    background-size:contain;
+    background-repeat: no-repeat;
+    padding-left:200px;
+    width:400px;
+
+    text-decoration: none;
+    color:black;
+}
+.card:hover {
+    background-color:lightgoldenrodyellow;
+}
+.card img {
+    margin:10px;
+    border-radius: 10px;
+    border:solid 1px black;
+    width:120px;
+    height:90px;
+}
+
+.info {
+}
+
+
+
+
+
