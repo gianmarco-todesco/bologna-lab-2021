@@ -7,18 +7,11 @@ MYLIB.initialize('renderCanvas', populateScene);
 function curve(t) {    
     t = (t-Math.floor(t))*2;
     let phi = Math.PI * 2 * t;
-    if(t<1)
-        return new BABYLON.Vector3(
-            -2+2*Math.cos(phi),
-            Math.cos(phi/2),
-            -2*Math.sin(phi)
-        );
-    else
-        return new BABYLON.Vector3(
-            2-2*Math.cos(phi),
-            Math.cos(phi/2),
-            -2*Math.sin(phi)
-        );
+    let y = Math.cos(phi/2) * 2.5;
+    let z = -2*Math.sin(phi);
+    let x = -2+2*Math.cos(phi);
+    if(t>1) x = -x; 
+    return new BABYLON.Vector3(x,y,z);
 }
 
 function createSegment(p0,p1,scene) {
@@ -100,16 +93,24 @@ function populateScene(scene) {
     */
 
     
-    let sphere = BABYLON.MeshBuilder.CreateSphere('a',{ diameter:0.6}, scene);
-    sphere.material = new BABYLON.StandardMaterial('mat', scene);
-    sphere.material.diffuseColor.set(1,0,0);
+    let car = BABYLON.MeshBuilder.CreateSphere('a',{ diameter:0.6}, scene);
+    car.scaling.set(2,1,1); 
+    car.material = new BABYLON.StandardMaterial('mat', scene);
+    car.material.diffuseColor.set(1,0,0);
 
     scene.registerBeforeRender(() => {
         let t = performance.now() * 0.001;
         t *= 0.1;
         t -= Math.floor(t);
-        sphere.position.copyFrom(curve(t));
-        sphere.position.y += 0.4;
+        car.position.copyFrom(curve(t));
+        car.position.y += 0.4;
+
+        // orient car
+		const epsilon = 0.001;
+		let dir = curve(t+epsilon).subtract(curve(t-epsilon));
+		car.rotation.y = Math.atan2(dir.z,-dir.x);
+		car.rotation.z = -Math.asin(dir.y/dir.length());
+
     });
     
 
