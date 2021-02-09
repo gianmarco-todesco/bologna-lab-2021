@@ -36,6 +36,19 @@ function populateScene(scene) {
     material.specularColor.set(0.01,0.01,0.01);
     material.diffuseTexture = new BABYLON.Texture("2k_jupiter.jpg", scene);
 
+
+
+    var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:100.0}, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./skybox", scene, 
+        ["_px.png","_py.png","_pz.png","_nx.png","_ny.png","_nz.png"]);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
+
+
     scene.registerBeforeRender(() => {
         let t = performance.now() * 0.001;
 
